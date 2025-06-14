@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "auto-reuse"
-version = "0.2"
+version = "0.3"
 description = "pre-commit hook to add missing copyright information"
 authors = [
     { name = "Karl Wette", email = "karl.wette@anu.edu.au" },
