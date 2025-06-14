@@ -14,6 +14,10 @@ from license_expression import Licensing
 __author__ = "Karl Wette"
 
 
+class NoAuthorError(Exception):
+    pass
+
+
 class NoLicenseError(Exception):
     pass
 
@@ -82,10 +86,9 @@ def reuse_annotate_add_authors(file_path, authors_years):
 
 def cli():
 
-    # For uncommitted files, use Git user as author and current date as year
+    # For uncommitted files, use Git user as author (if available) and current date as year
     out = run(
         ["git", "config", "user.name"],
-        check=True,
         stdout=PIPE,
         encoding="utf-8",
     )
@@ -93,7 +96,7 @@ def cli():
     current_year = datetime.now().year
 
     # Run reuse lint and parse JSON report
-    out = run(["reuse", "lint", "--json"], check=False, stdout=PIPE, encoding="utf-8")
+    out = run(["reuse", "lint", "--json"], stdout=PIPE, encoding="utf-8")
     report = json.loads(out.stdout)
 
     # Run through files to find missing copyright information
@@ -112,7 +115,16 @@ def cli():
             # Add copyright to Git authors with years of commits
             authors_years = git_log_author_year(file["path"])
             if not authors_years:
+
+                # Use Git user as author (if available)
+                if git_user == "":
+
+                    # No author available, give up
+                    msg = f"copyright author missing from {file['path']}"
+                    raise NoAuthorError(msg)
+
                 authors_years = {git_user: [current_year]}
+
             reuse_annotate_add_authors(file["path"], authors_years)
 
     # Download missing licenses
