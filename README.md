@@ -46,17 +46,17 @@ The hook performs the following actions:
 * The REUSE tool linter is run to check that all required copyright/licensing
   information is specified.
 
-* `pyproject.toml` is read, and the `project.license` field is parsed as an
-  [SPDX license expression].
+* The `project.license` and `project.license-files` fields are read from
+  `pyproject.toml`.
 
-* `project.license` is checked for any licenses which are missing from the
-  `LICENSES/` directory.
+* The `project.license` field is parsed as an [SPDX license expression], and is
+  checked for any licenses which are missing from the `LICENSES/` directory.
 
-* The `project.license-files` field is set to the list of license files in the
-  `LICENSES/` directory.
+* The `project.license-files` field is set to a list of any license files in the
+  `LICENSES/` directory that are referred to in the `project.license` field.
 
-* The top-level `LICENSE` file is set to a copy of the primary license file
-  defined in `project.license`.
+* The top-level `LICENSE` file is set to a copy of the primary license file, as
+  referred to in the `project.license` field.
 
 To use the hook, add the following to `.pre-commit-hooks.yaml`:
 
