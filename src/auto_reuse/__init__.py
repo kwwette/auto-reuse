@@ -57,7 +57,7 @@ def reuse_annotate_add_licenses(file_path, licenses):
     for lic in licenses:
         cmd.extend(["--license", lic])
     cmd.append(file_path)
-    run(cmd, check=True, stdout=DEVNULL, stderr=DEVNULL)
+    run(cmd, check=True, stdout=DEVNULL)
 
 
 def reuse_annotate_add_authors(file_path, authors_years):
@@ -77,7 +77,7 @@ def reuse_annotate_add_authors(file_path, authors_years):
         if min_year < max_year:
             cmd.extend(["--year", str(max_year)])
         cmd.append(file_path)
-        run(cmd, check=True, stdout=DEVNULL, stderr=DEVNULL)
+        run(cmd, check=True, stdout=DEVNULL)
 
 
 def cli():
