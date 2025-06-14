@@ -13,6 +13,10 @@ from license_expression import Licensing
 __author__ = "Karl Wette"
 
 
+class NoLicenseError(Exception):
+    pass
+
+
 class UnusedLicenseError(Exception):
     pass
 
@@ -41,6 +45,11 @@ def git_log_author_year(file_path):
 
 
 def reuse_annotate_add_licenses(file_path, licenses):
+
+    # Check for any license
+    if not licenses:
+        msg = f"no license specified in REUSE.toml for {file_path}"
+        raise NoLicenseError(msg)
 
     # Add license information to file
     cmd = ["reuse", "annotate"]
