@@ -36,6 +36,7 @@ pre-commit install
 description = "Perform linting checks"
 script = """
 pre-commit run -a
+pre-commit try-repo . auto-reuse
 """
 
 [tool.ppqs.scripts.clean]

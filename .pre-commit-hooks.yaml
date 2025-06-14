@@ -1,0 +1,7 @@
+- id: auto-reuse
+  name: auto-reuse
+  entry: auto-reuse
+  always_run: true
+  require_serial: true
+  pass_filenames: false
+  language: python
