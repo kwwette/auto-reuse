@@ -46,8 +46,8 @@ The hook performs the following actions:
 * The REUSE tool linter is run to check that all required copyright/licensing
   information is specified.
 
-* The `project.license` and `project.license-files` fields are read from
-  `pyproject.toml`.
+* The [`project.license` and `project.license-files`][license-and-license-files]
+  fields are read from `pyproject.toml`.
 
 * The `project.license` field is parsed as an [SPDX license expression], and is
   checked for any licenses which are missing from the `LICENSES/` directory.
@@ -73,4 +73,5 @@ repos:
 [REUSE.toml]:                   https://reuse.software/spec-3.3/#reusetoml
 [MIT License]:                  https://spdx.org/licenses/MIT.html
 [CC0-1.0 License]:              https://spdx.org/licenses/CC0-1.0.html
-[SPDX license expression]:      https://packaging.python.org/en/latest/guides/writing-pyproject-toml/#license-and-license-files
+[license-and-license-files]:    https://packaging.python.org/en/latest/guides/writing-pyproject-toml/#license-and-license-files
+[SPDX license expression]:      https://packaging.python.org/en/latest/glossary/#term-License-Expression
