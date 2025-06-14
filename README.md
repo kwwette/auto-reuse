@@ -63,7 +63,7 @@ To use the hook, add the following to `.pre-commit-hooks.yaml`:
 ```
 repos:
   - repo: https://github.com/kwwette/auto-reuse.git
-    rev: ...   # check repository for the latest tag
+    rev: v0.2
     hooks:
       - id: auto-reuse
 ```
