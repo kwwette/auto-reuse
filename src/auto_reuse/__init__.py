@@ -6,7 +6,7 @@ import json
 import shutil
 from datetime import datetime
 from pathlib import Path
-from subprocess import DEVNULL, run
+from subprocess import DEVNULL, PIPE, run
 
 import tomlkit
 from license_expression import Licensing
@@ -32,7 +32,7 @@ def git_log_author_year(file_path):
     out = run(
         ["git", "log", "--pretty=format:%as-%aN", file_path],
         check=True,
-        capture_output=True,
+        stdout=PIPE,
         encoding="utf-8",
     )
     authors_years = {}
@@ -86,16 +86,14 @@ def cli():
     out = run(
         ["git", "config", "user.name"],
         check=True,
-        capture_output=True,
+        stdout=PIPE,
         encoding="utf-8",
     )
     git_user = out.stdout.strip()
     current_year = datetime.now().year
 
     # Run reuse lint and parse JSON report
-    out = run(
-        ["reuse", "lint", "--json"], check=False, capture_output=True, encoding="utf-8"
-    )
+    out = run(["reuse", "lint", "--json"], check=False, stdout=PIPE, encoding="utf-8")
     report = json.loads(out.stdout)
 
     # Run through files to find missing copyright information
