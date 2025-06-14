@@ -3,6 +3,7 @@
 # SPDX-License-Identifier: MIT
 
 import json
+import shutil
 from datetime import datetime
 from pathlib import Path
 from subprocess import DEVNULL, run
@@ -138,10 +139,18 @@ def cli():
             msg = f"license {lic} appears in pyproject.toml but is not used to license any file"
             raise UnusedLicenseError(msg)
 
-    # Write top-level LICENSE file
+    # Duplicate primary license to top-level LICENSE file
     top_level_license = Path("LICENSE")
-    with top_level_license.open("wt") as f:
-        print(pyproject_license_expression, file=f)
+    pyproject_primary_license = licensing.primary_license_key(
+        pyproject_license_expression
+    )
+    pyproject_primary_license_file = (
+        Path("LICENSES") / f"{pyproject_primary_license}.txt"
+    )
+    if not pyproject_primary_license_file.is_file():
+        msg = f"license {pyproject_primary_license} appears in pyproject.toml but {pyproject_primary_license_file} does not exist"
+        raise MissingLicenseFileError(msg)
+    shutil.copy(pyproject_primary_license_file, top_level_license)
 
     # Reference all required licenses in pyproject.toml
     pyproject_license_files = [top_level_license]
