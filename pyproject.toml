@@ -51,3 +51,10 @@ pre-commit try-repo . auto-reuse
 [tool.ppqs.scripts.clean]
 description = "Clean up build files"
 script = "git clean -Xdf"
+
+[tool.ppqs.scripts.publish]
+description = "Publish package"
+script = """
+git push
+git push --tags
+"""
