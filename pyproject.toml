@@ -1,0 +1,43 @@
+[build-system]
+requires = ["setuptools>=64.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "auto-reuse"
+version = "0.0"
+description = "pre-commit hook to add missing copyright information"
+authors = [
+    { name = "Karl Wette", email = "karl.wette@anu.edu.au" },
+]
+requires-python = ">=3.10"
+dependencies = [
+    "license-expression>=30.4",
+    "reuse>=5.0",
+    "tomlkit>=0.13",
+]
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+
+[project.scripts]
+auto-reuse = "auto_reuse:cli"
+
+[tool.ppqs.defaults]
+print-header = true
+
+[tool.ppqs.scripts.init]
+description = "Initialise project"
+script = """
+python -m pip install pre-commit>=3.7
+pre-commit install
+"""
+
+[tool.ppqs.scripts.lint]
+description = "Perform linting checks"
+script = """
+pre-commit run -a
+"""
+
+[tool.ppqs.scripts.clean]
+description = "Clean up build files"
+script = "git clean -Xdf"
