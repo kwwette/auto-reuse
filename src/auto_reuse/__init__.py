@@ -153,7 +153,7 @@ def cli():
     shutil.copy(pyproject_primary_license_file, top_level_license)
 
     # Reference all required licenses in pyproject.toml
-    pyproject_license_files = [top_level_license]
+    pyproject_license_files = []
     for lic in pyproject_licenses:
         pyproject_license_file = Path("LICENSES") / f"{lic}.txt"
         if not pyproject_license_file.is_file():
