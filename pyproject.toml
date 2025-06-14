@@ -9,7 +9,7 @@ description = "pre-commit hook to add missing copyright information"
 authors = [
     { name = "Karl Wette", email = "karl.wette@anu.edu.au" },
 ]
-requires-python = ">=3.10"
+requires-python = ">=3.9"
 dependencies = [
     "license-expression>=30.4",
     "reuse>=5.0",
