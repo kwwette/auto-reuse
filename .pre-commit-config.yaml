@@ -1,6 +1,8 @@
 default_language_version:
   python: python3.10
 
+default_install_hook_types: [pre-commit, post-commit]
+
 repos:
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
@@ -31,3 +33,13 @@ repos:
     rev: 25.1.0
     hooks:
       - id: black
+
+  - repo: local
+    hooks:
+      - id: new-version-tag
+        name: new version tag
+        entry: python ./new_version_tag.py
+        stages: [post-commit]
+        always_run: true
+        language: python
+        additional_dependencies: ["tomlkit>=0.13"]
