@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2025 Karl Wette
+#
+# SPDX-License-Identifier: MIT
+
 import json
 from datetime import datetime
 from pathlib import Path
