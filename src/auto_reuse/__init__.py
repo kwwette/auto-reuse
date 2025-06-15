@@ -3,10 +3,11 @@
 # SPDX-License-Identifier: MIT
 
 import json
+import os
 import shutil
 from datetime import datetime
 from pathlib import Path
-from subprocess import DEVNULL, PIPE, run
+from subprocess import DEVNULL, PIPE, CalledProcessError, run
 
 import tomlkit
 from license_expression import Licensing
@@ -49,6 +50,17 @@ def git_log_author_year(file_path):
     return authors_years
 
 
+def run_reuse_annotate(cmd, **kwargs):
+
+    # Run reuse, print help if it fails
+    cmd_base = ["reuse", "annotate"]
+    try:
+        run(cmd_base + cmd, **kwargs)
+    except CalledProcessError as e:
+        run(cmd_base + ["--help"], check=False)
+        raise e
+
+
 def reuse_annotate_add_licenses(file_path, licenses):
 
     # Check for any license
@@ -57,11 +69,11 @@ def reuse_annotate_add_licenses(file_path, licenses):
         raise NoLicenseError(msg)
 
     # Add license information to file
-    cmd = ["reuse", "annotate"]
+    cmd = []
     for lic in licenses:
         cmd.extend(["--license", lic])
     cmd.append(file_path)
-    run(cmd, check=True, stdout=DEVNULL)
+    run_reuse_annotate(cmd, check=True, stdout=DEVNULL)
 
 
 def reuse_annotate_add_authors(file_path, authors_years):
@@ -69,8 +81,6 @@ def reuse_annotate_add_authors(file_path, authors_years):
     # Add copyright to authors with given years
     for author, years in authors_years.items():
         cmd = [
-            "reuse",
-            "annotate",
             "--merge-copyrights",
             "--copyright",
             author,
@@ -81,10 +91,13 @@ def reuse_annotate_add_authors(file_path, authors_years):
         if min_year < max_year:
             cmd.extend(["--year", str(max_year)])
         cmd.append(file_path)
-        run(cmd, check=True, stdout=DEVNULL)
+        run_reuse_annotate(cmd, check=True, stdout=DEVNULL)
 
 
 def cli():
+
+    # Set column width for reuse annotate --help
+    os.environ["COLUMNS"] = "80"
 
     # For uncommitted files, use Git user as author (if available) and current date as year
     out = run(
