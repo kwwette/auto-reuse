@@ -6,6 +6,7 @@ import json
 import os
 import shutil
 from datetime import datetime
+from operator import itemgetter
 from pathlib import Path
 from subprocess import DEVNULL, PIPE, CalledProcessError, run
 
@@ -72,7 +73,7 @@ def reuse_annotate_add_licenses(file_path, licenses):
     cmd = []
     for lic in licenses:
         cmd.extend(["--license", lic])
-    cmd.append(file_path)
+    cmd.append(str(file_path))
     run_reuse_annotate(cmd, check=True, stdout=DEVNULL)
 
 
@@ -90,7 +91,7 @@ def reuse_annotate_add_authors(file_path, authors_years):
         cmd.extend(["--year", str(min_year)])
         if min_year < max_year:
             cmd.extend(["--year", str(max_year)])
-        cmd.append(file_path)
+        cmd.append(str(file_path))
         run_reuse_annotate(cmd, check=True, stdout=DEVNULL)
 
 
@@ -114,7 +115,8 @@ def cli():
 
     # Run through files to find missing copyright information
     all_licenses = set()
-    for file in report["files"]:
+    for file in sorted(report["files"], key=itemgetter("path")):
+        file_path = Path(file["path"])
 
         # Save list of all licenses
         licenses = [s["value"] for s in file["spdx_expressions"]]
@@ -123,10 +125,10 @@ def cli():
         if not file["copyrights"]:
 
             # Add license information
-            reuse_annotate_add_licenses(file["path"], licenses)
+            reuse_annotate_add_licenses(file_path, licenses)
 
             # Add copyright to Git authors with years of commits
-            authors_years = git_log_author_year(file["path"])
+            authors_years = git_log_author_year(file_path)
             if not authors_years:
 
                 # Use Git user as author (if available)
@@ -138,7 +140,7 @@ def cli():
 
                 authors_years = {git_user: [current_year]}
 
-            reuse_annotate_add_authors(file["path"], authors_years)
+            reuse_annotate_add_authors(file_path, authors_years)
 
     # Download missing licenses
     run(["reuse", "download", "--all"], check=True)
