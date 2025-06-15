@@ -37,9 +37,18 @@ SPDX-License-Identifier = "MIT"
 The hook performs the following actions:
 
 * Add missing copyright/licensing header to files as specified in `REUSE.toml`.
-  Author(s) and year(s) for the copyright line are taken from the Git repository
-  history, except if the file has not yet been committed, in which case the Git
-  user name and current year are used.
+
+  * Author(s) and year(s) for the copyright line are taken from the Git
+    repository history, except if the file has not yet been committed, in which
+    case the Git user name and current year are used.
+
+  * The copyright/licensing header comment style is determined from the file
+    extension. Styles for custom/unknown extensions may be specified in the
+    `[tool.auto-reuse.styles]` section of `pyproject.toml`, e.g.:
+    ```toml
+    [tool.auto-reuse.styles]
+    ".script" = "python"   # .script files use Python-style (`#`) comments
+    ```
 
 * Missing license files are downloaded to the `LICENSES/` directory.
 

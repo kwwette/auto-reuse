@@ -62,7 +62,7 @@ def run_reuse_annotate(cmd, **kwargs):
         raise e
 
 
-def reuse_annotate_add_licenses(file_path, licenses):
+def reuse_annotate_add_licenses(file_path, licenses, styles):
 
     # Check for any license
     if not licenses:
@@ -73,11 +73,13 @@ def reuse_annotate_add_licenses(file_path, licenses):
     cmd = []
     for lic in licenses:
         cmd.extend(["--license", lic])
+    if file_path.suffix in styles:
+        cmd.extend(["--style", str(styles[file_path.suffix])])
     cmd.append(str(file_path))
     run_reuse_annotate(cmd, check=True, stdout=DEVNULL)
 
 
-def reuse_annotate_add_authors(file_path, authors_years):
+def reuse_annotate_add_authors(file_path, authors_years, styles):
 
     # Add copyright to authors with given years
     for author, years in authors_years.items():
@@ -91,6 +93,8 @@ def reuse_annotate_add_authors(file_path, authors_years):
         cmd.extend(["--year", str(min_year)])
         if min_year < max_year:
             cmd.extend(["--year", str(max_year)])
+        if file_path.suffix in styles:
+            cmd.extend(["--style", str(styles[file_path.suffix])])
         cmd.append(str(file_path))
         run_reuse_annotate(cmd, check=True, stdout=DEVNULL)
 
@@ -109,6 +113,17 @@ def cli():
     git_user = out.stdout.strip()
     current_year = datetime.now().year
 
+    # Read pyproject.toml
+    pyproject_toml_path = Path("pyproject.toml")
+    with pyproject_toml_path.open("rt") as f:
+        pyproject_toml = tomlkit.load(f)
+
+    # Read custom styles based on file extension
+    try:
+        styles = pyproject_toml["tool"]["auto-reuse"]["styles"]
+    except KeyError:
+        styles = {}
+
     # Run reuse lint and parse JSON report
     out = run(["reuse", "lint", "--json"], stdout=PIPE, encoding="utf-8")
     report = json.loads(out.stdout)
@@ -125,7 +140,7 @@ def cli():
         if not file["copyrights"]:
 
             # Add license information
-            reuse_annotate_add_licenses(file_path, licenses)
+            reuse_annotate_add_licenses(file_path, licenses, styles)
 
             # Add copyright to Git authors with years of commits
             authors_years = git_log_author_year(file_path)
@@ -140,18 +155,13 @@ def cli():
 
                 authors_years = {git_user: [current_year]}
 
-            reuse_annotate_add_authors(file_path, authors_years)
+            reuse_annotate_add_authors(file_path, authors_years, styles)
 
     # Download missing licenses
     run(["reuse", "download", "--all"], check=True)
 
     # Run reuse linter
     run(["reuse", "lint"], check=True)
-
-    # Read pyproject.toml
-    pyproject_toml_path = Path("pyproject.toml")
-    with pyproject_toml_path.open("rt") as f:
-        pyproject_toml = tomlkit.load(f)
 
     # Check license consistency with pyproject.toml
     licensing = Licensing()
