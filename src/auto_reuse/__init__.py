@@ -34,7 +34,7 @@ def git_log_author_year(file_path):
 
     # Get Git authors of a file and years of commits
     out = run(
-        ["git", "log", "--pretty=format:%as-%aN", file_path],
+        ["git", "log", "--follow", "--pretty=format:%as-%aN", str(file_path)],
         check=True,
         stdout=PIPE,
         encoding="utf-8",
