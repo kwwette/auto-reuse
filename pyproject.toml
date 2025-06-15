@@ -48,13 +48,13 @@ pre-commit run -a
 pre-commit try-repo . auto-reuse
 """
 
+[tool.ppqs.scripts.upload]
+description = "Upload package"
+script = """
+git push origin
+git push origin --tags
+"""
+
 [tool.ppqs.scripts.clean]
 description = "Clean up build files"
 script = "git clean -Xdf"
-
-[tool.ppqs.scripts.publish]
-description = "Publish package"
-script = """
-git push
-git push --tags
-"""
