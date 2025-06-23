@@ -22,13 +22,16 @@ license-files = ["LICENSES/MIT.txt"]
 [project.scripts]
 auto-reuse = "auto_reuse:cli"
 
+[tool.ruff]
+fix = true
+show-fixes = true
+
 [tool.ruff.lint]
 select = [
-    "E4",
-    "E7",
-    "E9",
+    "E4", "E7", "E9",
     "EM",
     "F",
+    "I",
 ]
 
 [tool.ppqs.defaults]
