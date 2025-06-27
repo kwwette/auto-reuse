@@ -1,3 +1,5 @@
+"""Create new version tag."""
+
 from pathlib import Path
 from subprocess import run
 

@@ -2,6 +2,8 @@
 #
 # SPDX-License-Identifier: MIT
 
+"""pre-commit hook to add missing copyright information."""
+
 import json
 import os
 import shutil
@@ -17,24 +19,31 @@ __author__ = "Karl Wette"
 
 
 class NoAuthorError(Exception):
+    """Raise if copyright author is missing."""
+
     pass
 
 
 class NoLicenseError(Exception):
+    """Raise if no license is specified."""
+
     pass
 
 
 class UnusedLicenseError(Exception):
+    """Raise if license is unused."""
+
     pass
 
 
 class MissingLicenseFileError(Exception):
+    """Raise if license file is missing."""
+
     pass
 
 
 def git_log_author_year(file_path):
-
-    # Get Git authors of a file and years of commits
+    """Get Git authors of a file and years of commits."""
     out = run(
         ["git", "log", "--follow", "--pretty=format:%as-%aN", str(file_path)],
         check=True,
@@ -52,8 +61,7 @@ def git_log_author_year(file_path):
 
 
 def run_reuse_annotate(cmd, **kwargs):
-
-    # Run reuse, print help if it fails
+    """Run reuse, print help if it fails."""
     cmd_base = ["reuse", "annotate"]
     try:
         run(cmd_base + cmd, **kwargs)
@@ -63,13 +71,10 @@ def run_reuse_annotate(cmd, **kwargs):
 
 
 def reuse_annotate_add_licenses(file_path, licenses, styles):
-
-    # Check for any license
+    """Add license information to file."""
     if not licenses:
         msg = f"no license specified in REUSE.toml for {file_path}"
         raise NoLicenseError(msg)
-
-    # Add license information to file
     cmd = []
     for lic in licenses:
         cmd.extend(["--license", lic])
@@ -80,8 +85,7 @@ def reuse_annotate_add_licenses(file_path, licenses, styles):
 
 
 def reuse_annotate_add_authors(file_path, authors_years, styles):
-
-    # Add copyright to authors with given years
+    """Add copyright to authors with given years."""
     for author, years in authors_years.items():
         cmd = [
             "--merge-copyrights",
@@ -100,6 +104,7 @@ def reuse_annotate_add_authors(file_path, authors_years, styles):
 
 
 def cli():
+    """Parse command line."""
 
     # Set column width for reuse annotate --help
     os.environ["COLUMNS"] = "80"
