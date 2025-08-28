@@ -72,7 +72,7 @@ To use the hook, add the following to `.pre-commit-hooks.yaml`:
 ```
 repos:
   - repo: https://github.com/kwwette/auto-reuse.git
-    rev: v0.2
+    rev: # see repository for latest tag
     hooks:
       - id: auto-reuse
 ```
