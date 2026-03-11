@@ -125,7 +125,8 @@ def cli():
 
     # Read custom styles based on file extension
     try:
-        styles = pyproject_toml["tool"]["auto-reuse"]["styles"]
+        tool_options = pyproject_toml["tool"]["assorted-pre-commit-hooks"]["copyright"]
+        styles = tool_options["styles"]
     except KeyError:
         styles = {}
 

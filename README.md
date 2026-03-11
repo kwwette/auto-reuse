@@ -1,4 +1,4 @@
-# auto-reuse
+# assorted-pre-commit-hooks / copyright
 
 [pre-commit] hook to add missing copyright information to a Python project. Uses
 the [REUSE tool].
@@ -44,9 +44,10 @@ The hook performs the following actions:
 
   * The copyright/licensing header comment style is determined from the file
     extension. Styles for custom/unknown extensions may be specified in the
-    `[tool.auto-reuse.styles]` section of `pyproject.toml`, e.g.:
+    `[tool.assorted-pre-commit-hooks.copyright.styles]` section of
+    `pyproject.toml`, e.g.:
     ```toml
-    [tool.auto-reuse.styles]
+    [tool.assorted-pre-commit-hooks.copyright.styles]
     ".script" = "python"   # .script files use Python-style (`#`) comments
     ```
 
@@ -71,10 +72,10 @@ To use the hook, add the following to `.pre-commit-hooks.yaml`:
 
 ```
 repos:
-  - repo: https://github.com/kwwette/auto-reuse.git
+  - repo: https://github.com/assorted-pre-commit-hooks/copyright
     rev: # see repository for latest tag
     hooks:
-      - id: auto-reuse
+      - id: copyright
 ```
 
 [pre-commit]:                   https://pre-commit.com/

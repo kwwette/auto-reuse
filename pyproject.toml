@@ -3,7 +3,7 @@ requires = ["setuptools>=64.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "auto-reuse"
+name = "copyright"
 version = "0.6"
 description = "pre-commit hook to add missing copyright information"
 authors = [
@@ -20,7 +20,7 @@ license = "MIT"
 license-files = ["LICENSES/MIT.txt"]
 
 [project.scripts]
-auto-reuse = "auto_reuse:cli"
+copyright = "copyright:cli"
 
 [tool.ruff]
 fix = true
@@ -55,7 +55,7 @@ pre-commit install
 description = "Perform linting checks"
 script = """
 pre-commit run -a
-pre-commit try-repo . auto-reuse
+pre-commit try-repo . copyright
 """
 
 [tool.ppqs.scripts.upload]
