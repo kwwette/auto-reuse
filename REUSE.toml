@@ -6,7 +6,6 @@ path = [
     ".pre-commit-config.yaml",
     ".pre-commit-hooks.yaml",
     "README.md",
-    "new_version_tag.py",
     "pyproject.toml",
 ]
 SPDX-FileCopyrightText = "NONE"
