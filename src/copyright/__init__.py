@@ -6,6 +6,7 @@
 
 import json
 import os
+import re
 import shutil
 from datetime import datetime
 from operator import itemgetter
@@ -21,25 +22,21 @@ __author__ = "Karl Wette"
 class NoAuthorError(Exception):
     """Raise if copyright author is missing."""
 
-    pass
-
 
 class NoLicenseError(Exception):
     """Raise if no license is specified."""
 
-    pass
+
+class MissingLicenseCopyrightInfo(Exception):
+    """Raise if a license file is missing copyright information."""
 
 
 class UnusedLicenseError(Exception):
     """Raise if license is unused."""
 
-    pass
-
 
 class MissingLicenseFileError(Exception):
     """Raise if license file is missing."""
-
-    pass
 
 
 def git_log_author_year(file_path):
@@ -169,6 +166,13 @@ def main() -> int:
     # Run reuse linter
     run(["reuse", "lint"], check=True)
 
+    # Check licenses for missing copyright information
+    for license_file in Path("LICENSES").glob("*.txt"):
+        license_text = license_file.read_text()
+        if re.search(r"<(year|copyright)", license_text) is not None:
+            msg = f"license file {license_file} is likely missing copyright information"
+            raise MissingLicenseCopyrightInfo(msg)
+
     # Check license consistency with pyproject.toml
     licensing = Licensing()
     pyproject_license_expression = pyproject_toml["project"]["license"]
@@ -210,6 +214,7 @@ def main() -> int:
     with pyproject_toml_tmp_path.open("wt") as f:
         tomlkit.dump(pyproject_toml, f)
     pyproject_toml_tmp_path.replace(pyproject_toml_path)
+
     return 0
 
 
