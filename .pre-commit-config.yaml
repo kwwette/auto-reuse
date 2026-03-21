@@ -23,6 +23,7 @@ repos:
     rev: 26.3.0
     hooks:
       - id: black
+        args: [--target-version=py310]
 
   - repo: https://github.com/assorted-pre-commit-hooks/version-tag
     rev: v0.1
