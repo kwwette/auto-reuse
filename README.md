@@ -38,7 +38,7 @@ The hook performs the following actions:
 
 * Add missing copyright/licensing header to files as specified in `REUSE.toml`.
 
-  * Author(s) and year(s) for the copyright line are taken from the Git
+  * Author(s) and year(s) for the copyright line are taken from the [Git]
     repository history, except if the file has not yet been committed, in which
     case the Git user name and current year are used.
 
@@ -79,6 +79,7 @@ repos:
 ```
 
 [pre-commit]:                   https://pre-commit.com/
+[Git]:                          https://git-scm.com/
 [REUSE tool]:                   https://reuse.software/dev/#tool
 [REUSE.toml]:                   https://reuse.software/spec-3.3/#reusetoml
 [MIT License]:                  https://spdx.org/licenses/MIT.html
