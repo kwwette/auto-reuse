@@ -20,7 +20,7 @@ license = "MIT"
 license-files = ["LICENSES/MIT.txt"]
 
 [project.scripts]
-copyright = "copyright:cli"
+copyright = "copyright:main"
 
 [tool.ruff]
 fix = true

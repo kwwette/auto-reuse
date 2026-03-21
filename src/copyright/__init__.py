@@ -103,8 +103,8 @@ def reuse_annotate_add_authors(file_path, authors_years, styles):
         run_reuse_annotate(cmd, check=True, stdout=DEVNULL)
 
 
-def cli():
-    """Parse command line."""
+def main() -> int:
+    """Main function."""
 
     # Set column width for reuse annotate --help
     os.environ["COLUMNS"] = "80"
@@ -210,3 +210,8 @@ def cli():
     with pyproject_toml_tmp_path.open("wt") as f:
         tomlkit.dump(pyproject_toml, f)
     pyproject_toml_tmp_path.replace(pyproject_toml_path)
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
