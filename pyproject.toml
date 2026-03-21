@@ -61,6 +61,7 @@ pre-commit try-repo . copyright
 [tool.ppqs.scripts.upload]
 description = "Upload package"
 script = """
+ppqs lint
 git push origin
 git push origin --tags
 """
