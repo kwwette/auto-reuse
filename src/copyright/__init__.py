@@ -168,10 +168,12 @@ def main() -> int:
 
     # Check licenses for missing copyright information
     for license_file in Path("LICENSES").glob("*.txt"):
-        license_text = license_file.read_text()
-        if re.search(r"<(year|copyright)", license_text) is not None:
-            msg = f"license file {license_file} is likely missing copyright information"
-            raise MissingLicenseCopyrightInfo(msg)
+        with license_file.open("rt") as f:
+            for i, line in enumerate(f):
+                line = line.rstrip()
+                if re.search(r"^Copyright\s+(:?\(.\))?\s+\D", line) is not None:
+                    msg = f"license file {license_file}, line {i} is likely missing copyright information: {line}"
+                    raise MissingLicenseCopyrightInfo(msg)
 
     # Check license consistency with pyproject.toml
     licensing = Licensing()
