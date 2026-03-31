@@ -200,13 +200,14 @@ def main() -> int:
     shutil.copy(pyproject_primary_license_file, top_level_license)
 
     # Reference all required licenses in pyproject.toml
-    pyproject_license_files = []
-    for lic in pyproject_licenses:
+    pyproject_license_files = [pyproject_primary_license_file]
+    for lic in sorted(all_licenses):
         pyproject_license_file = Path("LICENSES") / f"{lic}.txt"
         if not pyproject_license_file.is_file():
             msg = f"license {lic} appears in pyproject.toml but {pyproject_license_file} does not exist"
             raise MissingLicenseFileError(msg)
-        pyproject_license_files.append(pyproject_license_file)
+        if pyproject_license_file not in pyproject_license_files:
+            pyproject_license_files.append(pyproject_license_file)
 
     # Write license files to pyproject.toml
     pyproject_toml["project"]["license-files"] = [
