@@ -210,9 +210,11 @@ def main() -> int:
             pyproject_license_files.append(pyproject_license_file)
 
     # Write license files to pyproject.toml
-    pyproject_toml["project"]["license-files"] = [
-        str(p) for p in pyproject_license_files
-    ]
+    pyproject_toml["project"]["license-files"] = tomlkit.array(
+        [tomlkit.string(str(p), literal=False) for p in pyproject_license_files]
+    )
+    if len(pyproject_license_files) > 1:
+        pyproject_toml["project"]["license-files"].multiline(True)
     pyproject_toml_tmp_path = pyproject_toml_path.with_suffix(".toml.tmp")
     with pyproject_toml_tmp_path.open("wt") as f:
         tomlkit.dump(pyproject_toml, f)
