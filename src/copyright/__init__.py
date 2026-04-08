@@ -220,6 +220,19 @@ def main() -> int:
         tomlkit.dump(pyproject_toml, f)
     pyproject_toml_tmp_path.replace(pyproject_toml_path)
 
+    # Sort path entries in REUSE.toml
+    reuse_toml_path = Path("REUSE.toml")
+    if reuse_toml_path.is_file():
+        with reuse_toml_path.open("rt") as f:
+            reuse_toml = tomlkit.load(f)
+        for annotation in reuse_toml["annotations"]:
+            annotation["path"] = sorted(annotation["path"])
+            annotation["path"].multiline(True)
+        reuse_toml_tmp_path = reuse_toml_path.with_suffix(".toml.tmp")
+        with reuse_toml_tmp_path.open("wt") as f:
+            tomlkit.dump(reuse_toml, f)
+        reuse_toml_tmp_path.replace(reuse_toml_path)
+
     return 0
 
 
